@@ -1,73 +1,34 @@
 #include <stdio.h>
-#include <stdlib.h>
-
-#define N 10
-
-void wypisz(int *t, int n){
-	int i;
-	for(i=0; i<N; i++){
-		printf("%i ", t[i]);
-	}
-	printf("\n");
-	
-}
-
-
-int *pom; //tablica pomocnicza, potrzebna przy scalaniu
-
-//scalenie posortowanych podtablic
-void scal(int *tab, int lewy, int srodek, int prawy) 
-{
-	int i = lewy, j = srodek + 1;
  
-  //kopiujemy lew¹ i praw¹ czêœæ tablicy do tablicy pomocniczej
-  for(int i = lewy;i<=prawy; i++) 
-    pom[i] = tab[i];  
-  
-  //scalenie dwóch podtablic pomocniczych i zapisanie ich 
-  //we w³asciwej tablicy
-  for(int k=lewy;k<=prawy;k++) 
-  if(i<=srodek)
-    if(j <= prawy)
-         if(pom[j]<pom[i])
-             tab[k] = pom[j++];
-         else
-             tab[k] = pom[i++];
-    else
-        tab[k] = pom[i++];
-  else
-      tab[k] = pom[j++];
+int tab[5] = {4,2,6,1,5};
+int p[5];
+ 
+void print_table(int tab[], int size){
+	int i;
+	for(i = 0; i<size; i++){
+		printf("%d ", tab[i]);
+	}printf("\n");
 }
-
-void sortowanie_przez_scalanie(int *tab,int lewy, int prawy)
-{
-	//gdy mamy jeden element, to jest on ju¿ posortowany
-	if(prawy<=lewy) return; 
-	
-	//znajdujemy srodek podtablicy
-	int srodek = (prawy+lewy)/2;
-	
-	//dzielimy tablice na czêsæ lew¹ i prawa
-	sortowanie_przez_scalanie(tab, lewy, srodek); 
-	sortowanie_przez_scalanie(tab, srodek+1, prawy);
-	
-	//scalamy dwie ju¿ posortowane tablice
-	scal(tab, lewy, srodek, prawy);
-}
-
-
-int main(){
-	int tab[N], i;
-	
-	for(i=0; i<N; i++){
-		tab[i] = rand() % 100;
+ 
+void merge_sort(int poczatek, int koniec){
+	int is, i1, i2, i;
+	is = (poczatek + koniec + 1) /2;
+	if (is-poczatek > 1) merge_sort(poczatek, is-1);
+	if (koniec - is > 0) merge_sort(is, koniec);
+	i1 = poczatek;
+	i2 = is;
+	for (i = poczatek; i<=koniec; i++){
+		p[i] = ((i1 == is) ||((i2 <= koniec) && (tab[i1] > tab[i2])))?tab[i2++]:tab[i1++];
 	}
-	
-	wypisz(tab, N);
-	
-	sortowanie_przez_scalanie(tab, 0, N-1);
-	
-	wypisz(tab, N);
-	
+	for(i = poczatek;i<=koniec; i++){
+		tab[i] = p[i];
+	}
+}
+ 
+int main(void) {
+ 
+	print_table(tab, 5);
+	merge_sort(0, 4);
+	print_table(tab, 5);
 	return 0;
 }
